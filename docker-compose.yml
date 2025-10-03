@@ -1,0 +1,25 @@
+networks:
+  v2ray-net:
+    driver: bridge
+
+services:
+  v2ray:
+    image: teddysun/v2ray
+    container_name: v2ray-test
+    restart: unless-stopped
+    volumes:
+      - ./config.json:/etc/v2ray/config.json:ro
+    networks:
+      - v2ray-net
+
+  ubuntu:
+    image: ubuntu:24.04
+    container_name: ubuntu-test
+    stdin_open: true
+    tty: true
+    networks:
+      - v2ray-net
+    environment:
+      ALL_PROXY: "socks5://v2ray:1080"   
+    command: ["/bin/bash"]
+
